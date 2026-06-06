@@ -105,7 +105,7 @@ export const experience = [
     company: "Oregano Brandworks",
     role: "Podcast Video Editor",
     location: "Mumbai, India",
-    period: "2025 — Present",
+    period: "2026 — Present",
     type: "Full Time",
     responsibilities: [
       "Podcast production end-to-end",
@@ -332,7 +332,7 @@ export const scrollContent = [
   {
     id: 4,
     platform: "Food Series",
-    title: "Creator Growth Edit",
+    title: "food blog",
     views: "1.8M",
     viewsRaw: 1800000,
     engagement: "11.2%",
@@ -371,7 +371,7 @@ export const scrollContent = [
   {
     id: 7,
     platform: "Food Series",
-    title: "Zayka Series Ep 2",
+    title: "food blog",
     views: "800K",
     viewsRaw: 800000,
     engagement: "8.2%",

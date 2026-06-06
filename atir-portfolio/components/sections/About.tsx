@@ -59,7 +59,7 @@ const aboutStats = [
 
 export default function About() {
   return (
-    <section id="about" className="section-padding relative overflow-hidden bg-surface">
+    <section id="about" className="section-padding relative overflow-hidden bg-black">
       <div className="container-wide relative z-10">
 
         {/* ── Section header with correctly positioned 02 watermark ── */}
