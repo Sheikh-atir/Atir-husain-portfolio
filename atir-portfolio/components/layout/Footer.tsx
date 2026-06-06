@@ -1,60 +1,281 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { motion, useSpring, useMotionValue } from "framer-motion";
+import MagneticButton from "@/components/ui/MagneticButton";
+import Link from "next/link";
 import { siteConfig } from "@/lib/data";
+
+const navLinks = [
+  { name: "Work", href: "#work" },
+  { name: "Projects", href: "#projects" },
+  { name: "Services", href: "#services" },
+  { name: "Experience", href: "#experience" },
+  { name: "Contact", href: "#contact" },
+];
+
+const socialLinks = [
+  { name: "Instagram", href: siteConfig.social.instagram },
+  { name: "Twitter/X", href: siteConfig.social.twitter },
+  { name: "LinkedIn", href: siteConfig.social.linkedin },
+];
+
 export default function Footer() {
-  const year = new Date().getFullYear();
+  const containerRef = useRef<HTMLElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Subtle Magnetic Mouse Light (Parallax rather than direct follow)
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springConfig = { damping: 50, stiffness: 60, mass: 2 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        // Calculate distance from center, scale it down for a subtle shift
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const offsetX = e.clientX - rect.left - centerX;
+        const offsetY = e.clientY - rect.top - centerY;
+
+        mouseX.set(offsetX * 0.15); // moves 15% of the mouse distance
+        mouseY.set(offsetY * 0.15);
+      }
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
 
   return (
-    <footer className="relative border-t border-border-subtle bg-surface py-20 overflow-hidden">
-      {/* Very subtle top glow */}
+    <footer className="relative w-full px-3 md:px-6 pb-3 md:pb-6 pt-10 md:pt-16 bg-transparent">
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent)" }}
-      />
+        ref={containerRef}
+        className="relative w-full max-w-[1920px] mx-auto rounded-[40px] md:rounded-[48px] bg-[#02040A] border border-white/[0.05] overflow-hidden flex flex-col pt-16 md:pt-28 px-4 md:px-12 shadow-[inset_0_0_100px_rgba(0,229,255,0.03)]"
+      >
+        {/* =========================================
+            ATMOSPHERIC COLOR SYSTEM (Layers 1-5)
+            ========================================= */}
 
-      <div className="container-wide">
-        <div className="flex flex-col items-center text-center gap-10">
-          {/* Logo */}
-          <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center text-background font-black text-sm">
-            AH
-          </div>
+        {/* Layer 1: Huge Cyan Glow */}
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 0.9, 1],
+            x: [0, 80, -40, 0],
+            y: [0, -50, 40, 0],
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-[20%] left-0 w-[70vw] h-[70vw] bg-[#00E5FF]/[0.06] blur-[140px] rounded-full pointer-events-none z-0 mix-blend-screen"
+        />
 
-          {/* Statement */}
-          <p className="text-[28px] md:text-[36px] font-black text-white max-w-xl leading-tight tracking-tight">
-            Creating Stories That People{" "}
-            <span className="text-gradient-accent">Watch Till The End.</span>
-          </p>
+        {/* Layer 2: Deep Blue Ambient Gradient */}
+        <motion.div
+          animate={{
+            scale: [1, 1.1, 0.95, 1],
+            x: [0, -60, 60, 0],
+            y: [0, 60, -60, 0],
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[10%] -right-[10%] w-[80vw] h-[80vw] bg-[#061B40]/[0.5] blur-[160px] rounded-full pointer-events-none z-0 mix-blend-screen"
+        />
 
-          {/* Social links */}
-          <div className="flex items-center gap-4">
-            {[
-              { icon: "/assets/instagram.png", href: siteConfig.social.instagram, title: "Instagram" },
-              { icon: "/assets/twitter.png", href: siteConfig.social.twitter, title: "Twitter" },
-              { icon: "/assets/linkedin.png", href: siteConfig.social.linkedin, title: "LinkedIn" },
-            ].map(({ icon, href, title }) => (
-              <a
-                key={title}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={title}
-                title={title}
-                className="w-10 h-10 rounded-full border border-border-subtle flex items-center justify-center hover:border-accent/30 transition-all duration-300 opacity-75 hover:opacity-100"
+        {/* Layer 3: Subtle Teal Cloud */}
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 0.8, 1],
+            x: [0, 50, -50, 0],
+            y: [0, -50, 50, 0],
+          }}
+          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[10%] left-[10%] w-[60vw] h-[60vw] bg-[#008080]/[0.08] blur-[130px] rounded-full pointer-events-none z-0 mix-blend-screen"
+        />
+
+        {/* Layer 4: Soft Floating Particles */}
+        {mounted &&
+          Array.from({ length: 15 }).map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{
+                top: Math.random() * 100 + "%",
+                left: Math.random() * 100 + "%",
+                width: Math.random() * 4 + 1.5 + "px",
+                height: Math.random() * 4 + 1.5 + "px",
+              }}
+              animate={{
+                y: [0, -150, 0],
+                x: [0, Math.random() * 80 - 40, 0],
+                opacity: [0.05, 0.5, 0.05],
+                scale: [1, Math.random() * 0.8 + 1, 1],
+              }}
+              transition={{
+                duration: Math.random() * 15 + 15,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="absolute rounded-full bg-accent pointer-events-none blur-[1px] z-0"
+            />
+          ))}
+
+        {/* Layer 5: Animated radial light source (Subtle Magnetic Influence) */}
+        <motion.div
+          style={{ x: smoothX, y: smoothY }}
+          className="absolute top-1/2 left-1/2 w-[1000px] h-[1000px] -ml-[500px] -mt-[500px] rounded-full pointer-events-none z-0 mix-blend-screen opacity-70"
+        >
+          <div className="w-full h-full rounded-full bg-[radial-gradient(circle_at_center,rgba(0,180,255,0.06)_0%,transparent_50%)] blur-[50px]" />
+        </motion.div>
+
+        {/* =========================================
+            TOP ROW: Availability, Email Hero, CTA
+            ========================================= */}
+        <div className="relative z-10 w-full flex flex-col xl:flex-row justify-between items-center gap-12 xl:gap-8 mb-20 md:mb-32">
+          {/* Left: Availability */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex xl:w-1/3 justify-center xl:justify-start"
+          >
+            <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)]">
+              <div className="w-2.5 h-2.5 rounded-full bg-accent animate-[pulse_2s_ease-in-out_infinite] shadow-[0_0_10px_rgba(0,229,255,0.8)]" />
+              <span className="text-[12px] md:text-sm font-medium text-white/80 tracking-widest uppercase">
+                Available for Projects
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Center: Email Hero Headline */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex xl:w-1/3 justify-center text-center w-full"
+          >
+            <a
+              href={`mailto:${siteConfig.email}`}
+              className="group relative inline-block text-[clamp(28px,4.5vw,72px)] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tighter leading-none hover:to-white transition-all duration-500"
+            >
+              sheikhhussainr47
+              <br className="hidden sm:block" />
+              @gmail.com
+              {/* Animated Underline */}
+              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-accent transition-all duration-500 group-hover:w-full shadow-[0_0_20px_rgba(0,229,255,0.6)]" />
+            </a>
+          </motion.div>
+
+          {/* Right: CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="flex xl:w-1/3 justify-center xl:justify-end"
+          >
+            <MagneticButton
+              href="#contact"
+              className="relative overflow-hidden group bg-white text-black px-8 py-5 rounded-full font-bold text-[15px] flex items-center justify-center gap-3 transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,229,255,0.3)] hover:bg-accent hover:text-black hover:scale-105"
+            >
+              <span className="relative z-10">Start Project</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="relative z-10 transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
               >
-                <Image src={icon} alt={title} width={24} height={24} className="object-contain" />
-              </a>
+                <path
+                  d="M5 19L19 5M19 5V18.5M19 5H5.5"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </MagneticButton>
+          </motion.div>
+        </div>
+
+        {/* =========================================
+            MIDDLE ROW: Navigation & Socials
+            ========================================= */}
+        <div className="relative z-10 w-full flex flex-col items-center gap-10 md:gap-14 border-t border-white/[0.06] pt-16 md:pt-20 mb-20 md:mb-28">
+          {/* Navigation */}
+          <nav className="flex flex-wrap justify-center items-center gap-x-8 md:gap-x-14 gap-y-6">
+            {navLinks.map((link, index) => (
+              <motion.div
+                key={link.name}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.05 * index }}
+              >
+                <Link
+                  href={link.href}
+                  className="text-[15px] md:text-[16px] font-medium text-white/50 hover:text-white transition-colors duration-300 group relative py-2 px-1"
+                  data-cursor-hover
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-full" />
+                </Link>
+              </motion.div>
+            ))}
+          </nav>
+
+          {/* Socials */}
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+            {socialLinks.map((link, index) => (
+              <motion.div
+                key={link.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 * index }}
+              >
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 text-[14px] md:text-[15px] font-medium text-white/40 hover:text-accent transition-all duration-300"
+                  data-cursor-hover
+                >
+                  {link.name}
+                </a>
+              </motion.div>
             ))}
           </div>
+        </div>
 
-          {/* Divider */}
-          <div className="w-full h-px bg-border-subtle" />
+        {/* =========================================
+            BOTTOM ROW: Giant ATIR HUSAIN Typography
+            ========================================= */}
+        <div className="relative z-10 w-full flex justify-center items-end mt-auto pt-10 pb-0 overflow-hidden">
+          <motion.h1
+            initial={{ opacity: 0, y: 80, filter: "blur(15px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center font-black whitespace-nowrap tracking-tighter select-none w-full px-4"
+            style={{
+              fontSize: "clamp(80px, 12vw, 350px)",
+              lineHeight: 0.75,
+              color: "rgba(255, 255, 255, 0.8)",
+              WebkitTextStroke: "1px rgba(255, 255, 255, 0.1)",
+              textShadow: "0 -10px 80px rgba(0,229,255,0.1)",
+              mixBlendMode: "plus-lighter",
+            }}
+          >
+            ATIR HUSAIN
+          </motion.h1>
 
-          {/* Bottom row */}
-          <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3 text-[12px] text-text-secondary">
-            <p>© {year} Atir Husain. All rights reserved.</p>
-            <p>Designed &amp; crafted in Lucknow, India</p>
-          </div>
+          {/* Typography Bottom Reflection Glow */}
+          <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-[70%] h-[40%] bg-accent/[0.15] blur-[100px] pointer-events-none rounded-[100%]" />
         </div>
       </div>
     </footer>
