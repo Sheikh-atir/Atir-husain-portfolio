@@ -40,10 +40,7 @@ export default function Process() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               className="relative group"
             >
-              {/* Number watermark */}
-              <div className="process-number absolute -top-4 -left-2 pointer-events-none select-none">
-                {step.number}
-              </div>
+
 
               {/* Card */}
               <div className="glass glass-hover rounded-2xl p-7 relative z-10 h-full">

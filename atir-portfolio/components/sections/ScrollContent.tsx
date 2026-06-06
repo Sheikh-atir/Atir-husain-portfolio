@@ -4,7 +4,6 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import SectionReveal from "@/components/ui/SectionReveal";
 import { scrollContent } from "@/lib/data";
-import { Play } from "lucide-react";
 
 /* ─── Scroll Card ───────────────────────────────────────── */
 function ScrollCard({
@@ -58,7 +57,7 @@ function ScrollCard({
         />
       )}
 
-      {/* Video */}
+      {/* Video — muted by default, audio on hover */}
       {item.video && (
         <video
           ref={videoRef}
@@ -67,51 +66,21 @@ function ScrollCard({
           loop
           playsInline
           autoPlay
-          className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute inset-0 w-full h-full object-cover"
         />
       )}
 
-      {/* Platform badge */}
-      <div className="absolute top-4 left-4 z-10">
-        <span
-          className="text-[10px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full border border-white/10"
-          style={{ color: item.color, backgroundColor: `${item.color}18` }}
-        >
-          {item.platform}
-        </span>
-      </div>
-
-      {/* Audio icon on hover */}
-      <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div
-          className="w-8 h-8 rounded-full flex items-center justify-center"
-          style={{ background: `${item.color}33`, backdropFilter: "blur(8px)" }}
-        >
-          <svg viewBox="0 0 24 24" width="14" height="14" fill={item.color}>
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Content overlay */}
-      <div className="absolute inset-0 p-6 flex flex-col justify-end bg-gradient-to-t from-background via-background/50 to-transparent">
-        <p className="text-[11px] font-semibold text-white/40 tracking-widest uppercase mb-1">
-          {item.views} views
-        </p>
-        <h3 className="text-[17px] font-bold text-white leading-tight group-hover:text-accent transition-colors duration-300">
+      {/* Title only — bottom of card */}
+      <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-5">
+        <h3 className="text-[15px] font-bold text-white leading-snug">
           {item.title}
         </h3>
-        {item.link && (
-          <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest uppercase text-white/30 group-hover:text-white/70 transition-colors duration-300 mt-3">
-            <Play size={11} fill="currentColor" /> Watch
-          </div>
-        )}
       </div>
 
       {/* Hover glow border */}
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-2xl"
-        style={{ boxShadow: `inset 0 0 0 1px ${item.color}50` }}
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+        style={{ boxShadow: `inset 0 0 0 1px ${item.color}60` }}
       />
     </motion.div>
   );
@@ -189,7 +158,7 @@ export default function ScrollContent() {
   }, [applyMomentum]);
 
   return (
-    <section className="section-padding relative overflow-hidden bg-background">
+    <section id="reels" className="section-padding relative overflow-hidden bg-background">
       <div className="container-wide mb-12">
         <SectionReveal>
           <div className="mb-8 flex items-center gap-4">

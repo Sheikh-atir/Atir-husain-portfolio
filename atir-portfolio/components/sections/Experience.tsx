@@ -52,7 +52,7 @@ export default function Experience() {
       <div className="container-wide relative z-10">
         <SectionReveal>
           <div className="mb-16 md:mb-24 flex items-center gap-4">
-            <span className="process-number absolute -top-12 -left-4 md:-top-20 md:-left-8">04</span>
+
             <div className="w-12 h-px bg-accent" />
             <span className="eyebrow text-accent font-bold tracking-[0.3em]">Timeline</span>
           </div>

@@ -65,20 +65,7 @@ export default function About() {
         {/* ── Section header with correctly positioned 02 watermark ── */}
         <SectionReveal>
           <div className="relative mb-16 md:mb-24">
-            {/* Large watermark number — positioned behind */}
-            <span
-              className="select-none pointer-events-none absolute -top-8 -left-2"
-              style={{
-                fontSize: "clamp(80px, 12vw, 160px)",
-                fontWeight: 900,
-                lineHeight: 1,
-                letterSpacing: "-0.04em",
-                color: "rgba(255,255,255,0.04)",
-                fontFamily: "'Inter', sans-serif",
-              }}
-            >
-              02
-            </span>
+
 
             {/* Eyebrow row */}
             <div className="flex items-center gap-4 relative z-10 pt-12 md:pt-16">

@@ -36,8 +36,15 @@ function ProjectCard({
 }) {
   const color = projectColors[project.id];
 
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div onClick={onClick} className="group cursor-pointer">
+    <div 
+      onClick={onClick} 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="group cursor-pointer"
+    >
 
       {/* Thumbnail — 16:9 */}
       <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-[#111] border border-white/5 group-hover:border-white/15 transition-all duration-400">
@@ -55,15 +62,27 @@ function ProjectCard({
           />
         )}
 
-        {/* Hover play overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/35 transition-all duration-400 flex items-center justify-center">
-          <div
-            className="w-14 h-14 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300"
-            style={{ background: `${color}DD`, backdropFilter: "blur(8px)" }}
-          >
-            <Play size={18} fill="black" color="black" className="ml-0.5" />
+        {/* YouTube Hover Play */}
+        {isHovered && project.youtubeId && (
+          <iframe
+            src={`https://www.youtube.com/embed/${project.youtubeId}?autoplay=1&mute=0&controls=0&modestbranding=1&loop=1&playlist=${project.youtubeId}`}
+            allow="autoplay"
+            className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none"
+            style={{ border: 'none' }}
+          />
+        )}
+
+        {/* Hover play overlay (only shows while iframe is loading) */}
+        {!isHovered && (
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/35 transition-all duration-400 flex items-center justify-center z-20">
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300"
+              style={{ background: `${color}DD`, backdropFilter: "blur(8px)" }}
+            >
+              <Play size={18} fill="black" color="black" className="ml-0.5" />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Title below thumbnail */}
@@ -103,20 +122,20 @@ function CaseStudyModal({
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 40, opacity: 0, scale: 0.95 }}
         transition={{ type: "spring", damping: 26, stiffness: 220 }}
-        className="relative w-full max-w-5xl bg-[#080808] border border-white/8 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[88vh]"
+        className="relative w-full max-w-5xl aspect-video bg-black border border-white/8 rounded-3xl overflow-hidden shadow-2xl flex max-h-[88vh]"
       >
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 z-50 w-9 h-9 bg-white/5 backdrop-blur-md rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200 border border-white/10"
+          className="absolute top-5 right-5 z-50 w-9 h-9 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200 border border-white/10"
         >
           <X size={16} />
         </button>
 
-        {/* Left — YouTube embed */}
-        <div className="w-full md:w-1/2 relative bg-black flex-shrink-0 min-h-[260px] md:min-h-full">
+        {/* Full-width YouTube embed */}
+        <div className="w-full h-full relative">
           {project.youtubeId ? (
             <iframe
-              src={`https://www.youtube.com/embed/${project.youtubeId}?autoplay=1&mute=1&loop=1&playlist=${project.youtubeId}&controls=1&modestbranding=1&rel=0`}
+              src={`https://www.youtube.com/embed/${project.youtubeId}?autoplay=1&mute=0&loop=1&playlist=${project.youtubeId}&controls=1&modestbranding=1&rel=0`}
               title={project.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -129,71 +148,6 @@ function CaseStudyModal({
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-white/20 text-sm">No preview available</span>
             </div>
-          )}
-        </div>
-
-        {/* Right — Details */}
-        <div className="w-full md:w-1/2 p-8 md:p-10 overflow-y-auto flex flex-col gap-5">
-          <span
-            className="text-[10px] font-bold uppercase tracking-[0.22em] px-3 py-1.5 rounded-full border border-white/10 w-fit"
-            style={{ color, backgroundColor: `${color}12` }}
-          >
-            {project.category}
-          </span>
-
-          <h2 className="text-[28px] md:text-[32px] font-black text-white leading-tight">
-            {project.title}
-          </h2>
-
-          <div className="flex flex-wrap gap-4 text-[13px]">
-            <div>
-              <p className="text-white/30 uppercase tracking-wider text-[10px] font-semibold mb-0.5">Client</p>
-              <p className="text-white/80 font-medium">{project.client}</p>
-            </div>
-            <div>
-              <p className="text-white/30 uppercase tracking-wider text-[10px] font-semibold mb-0.5">Style</p>
-              <p className="text-white/80 font-medium">{project.style}</p>
-            </div>
-            {project.duration && (
-              <div>
-                <p className="text-white/30 uppercase tracking-wider text-[10px] font-semibold mb-0.5">Duration</p>
-                <p className="text-white/80 font-medium">{project.duration}</p>
-              </div>
-            )}
-          </div>
-
-          <div className="h-px w-full" style={{ background: `${color}30` }} />
-
-          <div>
-            <h4 className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-2">Overview</h4>
-            <p className="text-white/70 text-[14px] leading-relaxed">{project.description}</p>
-          </div>
-
-          {project.results && (
-            <div>
-              <p className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-1">Result</p>
-              <p className="font-bold text-[16px]" style={{ color }}>{project.results}</p>
-            </div>
-          )}
-
-          {project.tools && (
-            <div>
-              <p className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-2">Tools Used</p>
-              <p className="text-[13px] text-white/60 font-medium">{project.tools.join(" · ")}</p>
-            </div>
-          )}
-
-          {project.youtubeId && (
-            <a
-              href={`https://www.youtube.com/watch?v=${project.youtubeId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-[13px] font-semibold mt-auto pt-2 transition-colors duration-200"
-              style={{ color }}
-            >
-              <ExternalLink size={14} />
-              Watch on YouTube
-            </a>
           )}
         </div>
       </motion.div>
@@ -237,7 +191,12 @@ export default function Work() {
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    if (cat === "Short Form Reels") {
+                      document.querySelector("#reels")?.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
                   className={`px-4 py-2 rounded-full text-[12px] font-semibold tracking-wide transition-all duration-300 ${
                     activeCategory === cat
                       ? "bg-accent text-black"

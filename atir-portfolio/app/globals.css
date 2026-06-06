@@ -49,11 +49,25 @@
 }
 
 /* ─── Typography & Utilities ────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Global Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: none;
 }
 
 .text-hero {
