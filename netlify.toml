@@ -5,3 +5,5 @@
 
 [build.environment]
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  GIT_LFS_ENABLED = "true"
+  GIT_LFS_FETCH_INCLUDE = "*"
