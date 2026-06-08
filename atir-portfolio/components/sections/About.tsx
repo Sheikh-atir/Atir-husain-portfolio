@@ -110,7 +110,7 @@ export default function About() {
 
             {/* Stats grid */}
             <SectionReveal delay={0.2}>
-              <div className="grid grid-cols-3 gap-1 rounded-2xl overflow-hidden border border-border-subtle">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 rounded-2xl overflow-hidden border border-border-subtle">
                 {aboutStats.map((stat) => (
                   <div
                     key={stat.label}

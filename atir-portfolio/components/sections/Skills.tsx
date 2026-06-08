@@ -107,7 +107,7 @@ export default function Skills() {
               </p>
             </SectionReveal>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {software.map((sw, i) => (
                 <SoftwareCard key={sw.name} sw={sw} delay={i * 0.08 + 0.1} />
               ))}

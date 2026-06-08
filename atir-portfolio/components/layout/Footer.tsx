@@ -21,7 +21,7 @@ const socialLinks = [
 ];
 
 export default function Footer() {
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -143,9 +143,9 @@ export default function Footer() {
               viewport={{ once: true }}
               className="flex justify-start"
             >
-              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)]">
+              <div className="flex items-center gap-2 md:gap-3 bg-white/[0.03] border border-white/[0.08] px-4 md:px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)]">
                 <div className="w-2.5 h-2.5 rounded-full bg-accent animate-[pulse_2s_ease-in-out_infinite] shadow-[0_0_10px_rgba(0,229,255,0.8)]" />
-                <span className="text-[12px] md:text-sm font-medium text-white/80 tracking-widest uppercase">
+                <span className="text-[11px] md:text-sm font-medium text-white/80 tracking-widest uppercase truncate">
                   Available for Projects
                 </span>
               </div>
@@ -161,13 +161,13 @@ export default function Footer() {
             >
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)] hover:bg-white/[0.08] hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] transition-all duration-300 group cursor-pointer"
+                className="flex items-center gap-2 md:gap-3 bg-white/[0.03] border border-white/[0.08] px-4 md:px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)] hover:bg-white/[0.08] hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] transition-all duration-300 group cursor-pointer max-w-full"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent group-hover:scale-110 transition-transform duration-300">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
-                <span className="text-[13px] md:text-[15px] font-medium text-white/90 tracking-wide group-hover:text-white transition-colors duration-300">
+                <span className="text-[11px] sm:text-[13px] md:text-[15px] font-medium text-white/90 tracking-wide group-hover:text-white transition-colors duration-300 truncate">
                   sheikhhussainr47@gmail.com
                 </span>
               </a>
@@ -180,7 +180,7 @@ export default function Footer() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.8 }}
-            className="flex w-full xl:w-1/3 justify-start xl:justify-center text-left xl:text-center"
+            className="flex w-full xl:w-1/3 justify-center text-center"
           >
             <h2 className="text-[clamp(32px,3.5vw,56px)] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tighter leading-[1.1]">
               Let's build <br className="hidden xl:block" />
@@ -198,7 +198,7 @@ export default function Footer() {
           >
             <MagneticButton
               href="#contact"
-              className="relative overflow-hidden group bg-white text-black px-8 py-5 rounded-full font-bold text-[15px] flex items-center justify-center gap-3 transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,229,255,0.3)] hover:bg-accent hover:text-black hover:scale-105"
+              className="relative overflow-hidden group bg-white text-black px-6 md:px-8 py-4 md:py-5 rounded-full font-bold text-[13px] md:text-[15px] flex items-center justify-center gap-2 md:gap-3 transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,229,255,0.3)] hover:bg-accent hover:text-black hover:scale-105"
             >
               <span className="relative z-10">Start Project</span>
               <svg
@@ -282,7 +282,7 @@ export default function Footer() {
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
             className="text-center font-black whitespace-nowrap tracking-tighter select-none w-full px-4"
             style={{
-              fontSize: "clamp(80px, 12vw, 350px)",
+              fontSize: "clamp(35px, 11vw, 350px)",
               lineHeight: 0.75,
               color: "rgba(255, 255, 255, 0.8)",
               WebkitTextStroke: "1px rgba(255, 255, 255, 0.1)",

@@ -7,14 +7,15 @@ import {
   useTransform,
   useSpring,
   useMotionValue,
+  Variants
 } from "framer-motion";
 import Image from "next/image";
 
-const CONTAINER = {
+const CONTAINER: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
 };
-const ITEM = {
+const ITEM: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: {
     opacity: 1,
@@ -61,8 +62,7 @@ export default function Hero() {
           alt="Atir Husain — Video Editor"
           fill
           priority
-          className="object-cover"
-          style={{ objectPosition: "65% center" }}
+          className="object-cover object-[38%_70%] md:object-[65%_center]"
         />
 
         {/* Left side fade for text visibility */}
@@ -98,7 +98,7 @@ export default function Hero() {
           variants={CONTAINER}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-3 px-8 md:px-14 lg:px-20 max-w-[600px]"
+          className="flex flex-col gap-3 px-5 sm:px-8 md:px-14 lg:px-20 max-w-[600px]"
         >
           {/* Eyebrow */}
           <motion.div variants={ITEM} className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export default function Hero() {
             variants={ITEM}
             className="m-0 p-0 text-white uppercase leading-[0.85]"
             style={{
-              fontSize: "clamp(55px, 9.5vw, 120px)",
+              fontSize: "clamp(40px, 9.5vw, 120px)",
               letterSpacing: "-0.03em",
               fontWeight: 800,
             }}
@@ -144,7 +144,7 @@ export default function Hero() {
               marginTop: "2px",
             }}
           >
-            Podcast Editor&nbsp;&bull;&nbsp;Short-Form Specialist&nbsp;&bull;&nbsp;Motion Graphics
+            Podcast Editor • Short-Form Specialist • Motion Graphics
           </motion.p>
 
           {/* Description */}
@@ -162,10 +162,9 @@ export default function Hero() {
             engaging content that retains attention and drives results.
           </motion.p>
 
-          {/* CTA Buttons */}
           <motion.div
             variants={ITEM}
-            className="flex items-center gap-4 flex-wrap"
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
             style={{ marginTop: "18px" }}
           >
             {/* View Projects — solid cyan */}
@@ -175,7 +174,7 @@ export default function Hero() {
                 e.preventDefault();
                 document.querySelector("#work")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="inline-flex items-center font-bold text-black transition-all duration-300 hover:scale-[1.04]"
+              className="inline-flex justify-center items-center font-bold text-black transition-all duration-300 hover:scale-[1.04]"
               style={{
                 background: "#00E5FF",
                 padding: "13px 28px",
@@ -200,7 +199,7 @@ export default function Hero() {
                 e.preventDefault();
                 document.querySelector("#reels")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="inline-flex items-center gap-3 font-semibold text-white transition-all duration-300"
+              className="inline-flex justify-center items-center gap-3 font-semibold text-white transition-all duration-300"
               style={{
                 padding: "13px 22px",
                 borderRadius: "999px",
