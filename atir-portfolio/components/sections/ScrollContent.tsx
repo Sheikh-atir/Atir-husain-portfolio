@@ -19,6 +19,7 @@ function ScrollCard({
 
   const handleMouseEnter = () => {
     if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
       videoRef.current.muted = false;
       videoRef.current.volume = 0.5;
     }
@@ -26,6 +27,7 @@ function ScrollCard({
 
   const handleMouseLeave = () => {
     if (videoRef.current) {
+      videoRef.current.pause();
       videoRef.current.muted = true;
     }
   };
@@ -57,7 +59,7 @@ function ScrollCard({
         />
       )}
 
-      {/* Video — muted by default, audio on hover */}
+      {/* Video — lazy loaded, plays and unmutes on hover */}
       {item.video && (
         <video
           ref={videoRef}
@@ -65,7 +67,7 @@ function ScrollCard({
           muted
           loop
           playsInline
-          autoPlay
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover"
         />
       )}
