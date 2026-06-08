@@ -133,40 +133,59 @@ export default function Footer() {
         {/* =========================================
             TOP ROW: Availability, Email Hero, CTA
             ========================================= */}
-        <div className="relative z-10 w-full flex flex-col xl:flex-row justify-between items-center gap-12 xl:gap-8 mb-20 md:mb-32">
-          {/* Left: Availability */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex xl:w-1/3 justify-center xl:justify-start"
-          >
-            <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)]">
-              <div className="w-2.5 h-2.5 rounded-full bg-accent animate-[pulse_2s_ease-in-out_infinite] shadow-[0_0_10px_rgba(0,229,255,0.8)]" />
-              <span className="text-[12px] md:text-sm font-medium text-white/80 tracking-widest uppercase">
-                Available for Projects
-              </span>
-            </div>
-          </motion.div>
+        <div className="relative z-10 w-full flex flex-col xl:flex-row justify-between items-start xl:items-center gap-12 xl:gap-8 mb-20 md:mb-32">
+          {/* Left Side: Availability & Email */}
+          <div className="flex flex-col gap-6 w-full xl:w-1/3">
+            {/* Availability */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-start"
+            >
+              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)]">
+                <div className="w-2.5 h-2.5 rounded-full bg-accent animate-[pulse_2s_ease-in-out_infinite] shadow-[0_0_10px_rgba(0,229,255,0.8)]" />
+                <span className="text-[12px] md:text-sm font-medium text-white/80 tracking-widest uppercase">
+                  Available for Projects
+                </span>
+              </div>
+            </motion.div>
 
-          {/* Center: Email Hero Headline */}
+            {/* Email Contact Button */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="flex justify-start text-left w-full"
+            >
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)] hover:bg-white/[0.08] hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] transition-all duration-300 group cursor-pointer"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent group-hover:scale-110 transition-transform duration-300">
+                  <rect width="20" height="16" x="2" y="4" rx="2"/>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <span className="text-[13px] md:text-[15px] font-medium text-white/90 tracking-wide group-hover:text-white transition-colors duration-300">
+                  sheikhhussainr47@gmail.com
+                </span>
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Center: Hero Text */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex xl:w-1/3 justify-center text-center w-full"
+            transition={{ delay: 0.1, duration: 0.8 }}
+            className="flex w-full xl:w-1/3 justify-start xl:justify-center text-left xl:text-center"
           >
-            <a
-              href={`mailto:${siteConfig.email}`}
-              className="group relative inline-block text-[clamp(28px,4.5vw,72px)] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tighter leading-none hover:to-white transition-all duration-500"
-            >
-              sheikhhussainr47
-              <br className="hidden sm:block" />
-              @gmail.com
-              {/* Animated Underline */}
-              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-accent transition-all duration-500 group-hover:w-full shadow-[0_0_20px_rgba(0,229,255,0.6)]" />
-            </a>
+            <h2 className="text-[clamp(32px,3.5vw,56px)] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tighter leading-[1.1]">
+              Let's build <br className="hidden xl:block" />
+              <span className="text-accent">something</span> great.
+            </h2>
           </motion.div>
 
           {/* Right: CTA Button */}
@@ -175,7 +194,7 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="flex xl:w-1/3 justify-center xl:justify-end"
+            className="flex w-full xl:w-1/3 justify-start xl:justify-end"
           >
             <MagneticButton
               href="#contact"
