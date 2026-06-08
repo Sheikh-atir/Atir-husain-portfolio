@@ -164,8 +164,8 @@ export default function Footer() {
                 className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-6 py-3 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(0,229,255,0.05)] hover:bg-white/[0.08] hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] transition-all duration-300 group cursor-pointer"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent group-hover:scale-110 transition-transform duration-300">
-                  <rect width="20" height="16" x="2" y="4" rx="2"/>
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                  <rect width="20" height="16" x="2" y="4" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
                 <span className="text-[13px] md:text-[15px] font-medium text-white/90 tracking-wide group-hover:text-white transition-colors duration-300">
                   sheikhhussainr47@gmail.com
@@ -182,7 +182,7 @@ export default function Footer() {
             transition={{ delay: 0.1, duration: 0.8 }}
             className="flex w-full xl:w-1/3 justify-start xl:justify-center text-left xl:text-center"
           >
-            <h2 className="text-[clamp(32px,3.5vw,56px)] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tighter leading-[1.1]">
+            <h2 className="text-[clamp(32px,3.5vw,56px)] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tighter leading-[1.1]">
               Let's build <br className="hidden xl:block" />
               <span className="text-accent">something</span> great.
             </h2>
