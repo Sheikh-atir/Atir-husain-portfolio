@@ -14,14 +14,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    timers.push(setTimeout(() => setPhase(1), 150));   // Name
-    timers.push(setTimeout(() => setPhase(2), 850));   // VIDEO EDITOR (cyan)
-    timers.push(setTimeout(() => setPhase(3), 1450));  // PODCAST EDITOR
-    timers.push(setTimeout(() => setPhase(4), 2000));  // SHORT FORM EDITOR
+    timers.push(setTimeout(() => setPhase(1), 100));   // Name
+    timers.push(setTimeout(() => setPhase(2), 550));   // VIDEO EDITOR (cyan)
+    timers.push(setTimeout(() => setPhase(3), 950));   // PODCAST EDITOR
+    timers.push(setTimeout(() => setPhase(4), 1300));  // SHORT FORM EDITOR
     timers.push(setTimeout(() => {
       setVisible(false);
-      setTimeout(onComplete, 650);
-    }, 2900));
+      setTimeout(onComplete, 450);
+    }, 1900));
 
     return () => timers.forEach(clearTimeout);
   }, [onComplete]);

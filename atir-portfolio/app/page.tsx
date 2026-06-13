@@ -13,7 +13,7 @@ import Stats from "@/components/sections/Stats";
 import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/layout/Footer";
-import CustomCursor from "@/components/ui/CustomCursor";
+
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
@@ -24,8 +24,7 @@ export default function Home() {
       {/* Noise texture */}
       <div className="noise-overlay" />
 
-      {/* Custom cursor */}
-      <CustomCursor />
+
 
       <LoadingScreen onComplete={() => setLoaded(true)} />
 

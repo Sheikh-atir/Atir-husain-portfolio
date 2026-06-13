@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionReveal from "@/components/ui/SectionReveal";
 import { projects } from "@/lib/data";
-import { X, Play, ExternalLink } from "lucide-react";
+import { X, Play } from "lucide-react";
 
 const categories = [
   "All",
@@ -53,6 +53,9 @@ function ProjectCard({
             src={project.thumbnail}
             alt={project.title}
             fill
+            loading="lazy"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            quality={80}
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -103,7 +106,6 @@ function CaseStudyModal({
   project: (typeof projects)[0];
   onClose: () => void;
 }) {
-  const color = projectColors[project.id];
 
   return (
     <motion.div

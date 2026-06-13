@@ -1,10 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useSpring, useMotionValue } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 import Link from "next/link";
 import { siteConfig } from "@/lib/data";
+
+// Generated once at module-load — satisfies React purity rules (no Math.random in render)
+const PARTICLES = Array.from({ length: 15 }, () => ({
+  top: Math.random() * 100,
+  left: Math.random() * 100,
+  width: Math.random() * 4 + 1.5,
+  height: Math.random() * 4 + 1.5,
+  dx: Math.random() * 80 - 40,
+  scale: Math.random() * 0.8 + 1,
+  duration: Math.random() * 15 + 15,
+}));
 
 const navLinks = [
   { name: "Work", href: "#work" },
@@ -22,11 +33,6 @@ const socialLinks = [
 
 export default function Footer() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Subtle Magnetic Mouse Light (Parallax rather than direct follow)
   const mouseX = useMotionValue(0);
@@ -97,24 +103,23 @@ export default function Footer() {
         />
 
         {/* Layer 4: Soft Floating Particles */}
-        {mounted &&
-          Array.from({ length: 15 }).map((_, i) => (
+        {PARTICLES.map((p, i) => (
             <motion.div
               key={i}
               initial={{
-                top: Math.random() * 100 + "%",
-                left: Math.random() * 100 + "%",
-                width: Math.random() * 4 + 1.5 + "px",
-                height: Math.random() * 4 + 1.5 + "px",
+                top: p.top + "%",
+                left: p.left + "%",
+                width: p.width + "px",
+                height: p.height + "px",
               }}
               animate={{
                 y: [0, -150, 0],
-                x: [0, Math.random() * 80 - 40, 0],
+                x: [0, p.dx, 0],
                 opacity: [0.05, 0.5, 0.05],
-                scale: [1, Math.random() * 0.8 + 1, 1],
+                scale: [1, p.scale, 1],
               }}
               transition={{
-                duration: Math.random() * 15 + 15,
+                duration: p.duration,
                 repeat: Infinity,
                 ease: "linear",
               }}
@@ -183,7 +188,7 @@ export default function Footer() {
             className="flex w-full xl:w-1/3 justify-center text-center"
           >
             <h2 className="text-[clamp(32px,3.5vw,56px)] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tighter leading-[1.1]">
-              Let's build <br className="hidden xl:block" />
+              Let&apos;s build <br className="hidden xl:block" />
               <span className="text-accent">something</span> great.
             </h2>
           </motion.div>

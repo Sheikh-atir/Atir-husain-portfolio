@@ -31,7 +31,8 @@ export default function Hero() {
   const mX = useMotionValue(0);
   const mY = useMotionValue(0);
   const sX = useSpring(mX, { stiffness: 35, damping: 20 });
-  const sY = useSpring(mY, { stiffness: 35, damping: 20 });
+  // sY intentionally unused — only horizontal parallax applied to background
+  useSpring(mY, { stiffness: 35, damping: 20 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const { left, top, width, height } = ref.current!.getBoundingClientRect();
@@ -62,6 +63,8 @@ export default function Hero() {
           alt="Atir Husain — Video Editor"
           fill
           priority
+          sizes="100vw"
+          quality={85}
           className="object-cover object-[38%_70%] md:object-[65%_center]"
         />
 

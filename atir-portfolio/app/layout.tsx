@@ -8,6 +8,8 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -56,6 +58,16 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Preconnect for YouTube embeds */}
+        <link rel="preconnect" href="https://www.youtube.com" />
+        <link rel="dns-prefetch" href="https://i.ytimg.com" />
+        {/* Preload critical hero image */}
+        <link
+          rel="preload"
+          as="image"
+          href="/assets/hero-image.png"
+          fetchPriority="high"
+        />
       </head>
       <body className="bg-background text-white antialiased">
         <div className="noise-overlay" aria-hidden="true" />

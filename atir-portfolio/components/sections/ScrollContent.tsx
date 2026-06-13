@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import SectionReveal from "@/components/ui/SectionReveal";
 import { scrollContent } from "@/lib/data";
@@ -16,30 +16,62 @@ function ScrollCard({
   isDragging: React.MutableRefObject<boolean>;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // IntersectionObserver: only assign video src when card is near viewport
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card || !item.video) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px", threshold: 0 }
+    );
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [item.video]);
+
+  // Auto-play muted when video element mounts (browsers allow muted autoplay)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !isVisible) return;
+    video.muted = true;
+    video.play().catch(() => {});
+  }, [isVisible]);
 
   const handleMouseEnter = () => {
     if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
       videoRef.current.muted = false;
       videoRef.current.volume = 0.5;
+      videoRef.current.play().catch(() => {});
     }
   };
 
   const handleMouseLeave = () => {
     if (videoRef.current) {
-      videoRef.current.pause();
       videoRef.current.muted = true;
+      // keep playing silently so there's no black frame on next hover
     }
   };
 
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.7, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="scroll-snap-card relative rounded-2xl overflow-hidden border border-border-subtle group cursor-pointer bg-surface flex-shrink-0"
-      style={{ width: "300px", aspectRatio: "9/16" }}
+      className="scroll-snap-card relative rounded-2xl overflow-hidden border border-border-subtle group cursor-pointer flex-shrink-0"
+      style={{
+        width: "300px",
+        aspectRatio: "9/16",
+        background: `linear-gradient(175deg, ${item.color}33 0%, rgba(5,5,5,0.98) 70%)`,
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={() => {
@@ -49,25 +81,16 @@ function ScrollCard({
       }}
       data-cursor-hover
     >
-      {/* Fallback gradient */}
-      {!item.video && (
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(175deg, ${item.color}22 0%, rgba(5,5,5,0.95) 60%, rgba(5,5,5,1) 100%)`,
-          }}
-        />
-      )}
-
-      {/* Video — lazy loaded, plays and unmutes on hover */}
-      {item.video && (
+      {/* Video — lazy loaded via IntersectionObserver, muted autoplay, unmutes on hover */}
+      {item.video && isVisible && (
         <video
           ref={videoRef}
           src={item.video}
           muted
           loop
+          autoPlay
           playsInline
-          preload="metadata"
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover"
         />
       )}
@@ -101,27 +124,24 @@ export default function ScrollContent() {
   const isPointerDown = useRef(false);
 
   /* ── Momentum deceleration after release ── */
-  const applyMomentum = useCallback(() => {
+  // All refs — never read/written during render, only in event callbacks
+  const applyMomentum = () => {
     const el = containerRef.current;
     if (!el) return;
-
     const friction = 0.92;
     velX.current *= friction;
-
     if (Math.abs(velX.current) < 0.4) {
       velX.current = 0;
       return;
     }
-
     el.scrollLeft -= velX.current;
     animFrameRef.current = requestAnimationFrame(applyMomentum);
-  }, []);
+  };
 
   const handlePointerDown = (e: React.PointerEvent) => {
     const el = containerRef.current;
     if (!el) return;
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-
     isPointerDown.current = true;
     isDragging.current = false;
     startX.current = e.pageX;
@@ -137,13 +157,11 @@ export default function ScrollContent() {
     const dx = e.pageX - startX.current;
     if (Math.abs(dx) > 4) isDragging.current = true;
     if (!isDragging.current) return;
-
     const now = Date.now();
     const dt = now - lastTime.current || 1;
-    velX.current = ((lastX.current - e.pageX) / dt) * 16; // scale to ~60fps
+    velX.current = ((lastX.current - e.pageX) / dt) * 16;
     lastX.current = e.pageX;
     lastTime.current = now;
-
     containerRef.current.scrollLeft = startScrollLeft.current - dx;
   };
 
@@ -157,7 +175,7 @@ export default function ScrollContent() {
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [applyMomentum]);
+  }, []);
 
   return (
     <section id="reels" className="section-padding relative overflow-hidden bg-background">
