@@ -7,7 +7,23 @@
   GIT_LFS_ENABLED = "true"
   NODE_VERSION = "20"
 
-# ── Cache static assets for 1 year ──────────────────────────
+# ── MP4 video files: byte-range streaming (critical for fast video playback) ──
+[[headers]]
+  for = "/assets/*.mp4"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Accept-Ranges = "bytes"
+    Content-Type = "video/mp4"
+
+# ── WebM video files ───────────────────────────────────────────────────────────
+[[headers]]
+  for = "/assets/*.webm"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Accept-Ranges = "bytes"
+    Content-Type = "video/webm"
+
+# ── Cache all static assets 1 year ────────────────────────────────────────────
 [[headers]]
   for = "/assets/*"
   [headers.values]
@@ -18,7 +34,13 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# ── Security headers on all pages ───────────────────────────
+# ── HTML pages: always revalidate ────────────────────────────────────────────
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# ── Security + performance headers on all pages ──────────────────────────────
 [[headers]]
   for = "/*"
   [headers.values]
@@ -26,3 +48,4 @@
     X-Frame-Options = "SAMEORIGIN"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    X-DNS-Prefetch-Control = "on"

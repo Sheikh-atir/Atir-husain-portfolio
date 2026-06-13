@@ -61,12 +61,21 @@ export default function RootLayout({
         {/* Preconnect for YouTube embeds */}
         <link rel="preconnect" href="https://www.youtube.com" />
         <link rel="dns-prefetch" href="https://i.ytimg.com" />
+        {/* Netlify CDN — video files are served from here */}
+        <link rel="preconnect" href="https://atirhusain.netlify.app" crossOrigin="anonymous" />
         {/* Preload critical hero image */}
         <link
           rel="preload"
           as="image"
           href="/assets/hero-image.png"
           fetchPriority="high"
+        />
+        {/* Preload first reel video (20MB — smallest, loads fast) */}
+        <link
+          rel="preload"
+          as="video"
+          href="/assets/dr-shipra.mp4"
+          type="video/mp4"
         />
       </head>
       <body className="bg-background text-white antialiased">

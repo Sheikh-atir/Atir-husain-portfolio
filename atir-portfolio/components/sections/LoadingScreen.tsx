@@ -14,14 +14,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    timers.push(setTimeout(() => setPhase(1), 100));   // Name
-    timers.push(setTimeout(() => setPhase(2), 550));   // VIDEO EDITOR (cyan)
-    timers.push(setTimeout(() => setPhase(3), 950));   // PODCAST EDITOR
-    timers.push(setTimeout(() => setPhase(4), 1300));  // SHORT FORM EDITOR
+    timers.push(setTimeout(() => setPhase(1), 80));    // Name
+    timers.push(setTimeout(() => setPhase(2), 380));   // VIDEO EDITOR (cyan)
+    timers.push(setTimeout(() => setPhase(3), 680));   // PODCAST EDITOR
+    timers.push(setTimeout(() => setPhase(4), 920));   // SHORT FORM EDITOR
     timers.push(setTimeout(() => {
       setVisible(false);
-      setTimeout(onComplete, 450);
-    }, 1900));
+      setTimeout(onComplete, 350);
+    }, 1300));
 
     return () => timers.forEach(clearTimeout);
   }, [onComplete]);
@@ -157,7 +157,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                     className="h-full"
                     initial={{ width: "0%" }}
                     animate={{ width: "100%" }}
-                    transition={{ duration: 2.2, ease: "linear" }}
+                    transition={{ duration: 1.4, ease: "linear" }}
                     style={{ background: "#00E5FF" }}
                   />
                 </motion.div>

@@ -5,6 +5,21 @@ import { motion } from "framer-motion";
 import SectionReveal from "@/components/ui/SectionReveal";
 import { scrollContent } from "@/lib/data";
 
+/* ─── Poster: inline SVG gradient so card is never black ──────────── */
+function makePoster(color: string): string {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='300' height='533'>
+    <defs>
+      <linearGradient id='g' x1='0' y1='0' x2='0' y2='1'>
+        <stop offset='0%'  stop-color='${color}' stop-opacity='0.35'/>
+        <stop offset='60%' stop-color='#050505' stop-opacity='0.98'/>
+        <stop offset='100%' stop-color='#050505' stop-opacity='1'/>
+      </linearGradient>
+    </defs>
+    <rect width='300' height='533' fill='url(#g)'/>
+  </svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 /* ─── Scroll Card ───────────────────────────────────────── */
 function ScrollCard({
   item,
@@ -16,13 +31,23 @@ function ScrollCard({
   isDragging: React.MutableRefObject<boolean>;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef  = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  // IntersectionObserver: only assign video src when card is near viewport
+  // First 2 cards: load immediately. Rest: load when within 200px of viewport.
+  // This prevents 8 large videos downloading simultaneously on page load.
+  const rootMargin = index < 2 ? "600px" : "200px";
+
   useEffect(() => {
     const card = cardRef.current;
     if (!card || !item.video) return;
+
+    // First 2 cards skip the observer entirely — load right away
+    if (index < 2) {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -30,13 +55,13 @@ function ScrollCard({
           observer.disconnect();
         }
       },
-      { rootMargin: "300px", threshold: 0 }
+      { rootMargin, threshold: 0 }
     );
     observer.observe(card);
     return () => observer.disconnect();
-  }, [item.video]);
+  }, [item.video, index, rootMargin]);
 
-  // Auto-play muted when video element mounts (browsers allow muted autoplay)
+  // Auto-play muted as soon as src is assigned (browsers allow muted autoplay)
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !isVisible) return;
@@ -55,9 +80,14 @@ function ScrollCard({
   const handleMouseLeave = () => {
     if (videoRef.current) {
       videoRef.current.muted = true;
-      // keep playing silently so there's no black frame on next hover
+      // keep playing silently — no black frame on next hover
     }
   };
+
+  // First 2 cards get preload="auto" for instant play.
+  // The rest get preload="metadata" — browser only fetches the first few KB
+  // (enough for duration + first frame) without buffering the whole file.
+  const preloadMode = index < 2 ? "auto" : "metadata";
 
   return (
     <motion.div
@@ -65,7 +95,7 @@ function ScrollCard({
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.7, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ duration: 0.7, delay: index * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="scroll-snap-card relative rounded-2xl overflow-hidden border border-border-subtle group cursor-pointer flex-shrink-0"
       style={{
         width: "300px",
@@ -81,7 +111,7 @@ function ScrollCard({
       }}
       data-cursor-hover
     >
-      {/* Video — lazy loaded via IntersectionObserver, muted autoplay, unmutes on hover */}
+      {/* Video — lazy/eager loaded, muted autoplay, unmutes on hover */}
       {item.video && isVisible && (
         <video
           ref={videoRef}
@@ -90,7 +120,8 @@ function ScrollCard({
           loop
           autoPlay
           playsInline
-          preload="auto"
+          preload={preloadMode}
+          poster={makePoster(item.color)}
           className="absolute inset-0 w-full h-full object-cover"
         />
       )}
@@ -113,27 +144,22 @@ function ScrollCard({
 
 /* ─── Main Section ──────────────────────────────────────── */
 export default function ScrollContent() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
+  const containerRef    = useRef<HTMLDivElement>(null);
+  const isDragging      = useRef(false);
+  const startX          = useRef(0);
   const startScrollLeft = useRef(0);
-  const velX = useRef(0);
-  const lastX = useRef(0);
-  const lastTime = useRef(0);
-  const animFrameRef = useRef<number | null>(null);
-  const isPointerDown = useRef(false);
+  const velX            = useRef(0);
+  const lastX           = useRef(0);
+  const lastTime        = useRef(0);
+  const animFrameRef    = useRef<number | null>(null);
+  const isPointerDown   = useRef(false);
 
   /* ── Momentum deceleration after release ── */
-  // All refs — never read/written during render, only in event callbacks
   const applyMomentum = () => {
     const el = containerRef.current;
     if (!el) return;
-    const friction = 0.92;
-    velX.current *= friction;
-    if (Math.abs(velX.current) < 0.4) {
-      velX.current = 0;
-      return;
-    }
+    velX.current *= 0.92;
+    if (Math.abs(velX.current) < 0.4) { velX.current = 0; return; }
     el.scrollLeft -= velX.current;
     animFrameRef.current = requestAnimationFrame(applyMomentum);
   };
@@ -142,13 +168,13 @@ export default function ScrollContent() {
     const el = containerRef.current;
     if (!el) return;
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    isPointerDown.current = true;
-    isDragging.current = false;
-    startX.current = e.pageX;
+    isPointerDown.current   = true;
+    isDragging.current      = false;
+    startX.current          = e.pageX;
     startScrollLeft.current = el.scrollLeft;
-    lastX.current = e.pageX;
-    lastTime.current = Date.now();
-    velX.current = 0;
+    lastX.current           = e.pageX;
+    lastTime.current        = Date.now();
+    velX.current            = 0;
     el.setPointerCapture(e.pointerId);
   };
 
@@ -158,9 +184,9 @@ export default function ScrollContent() {
     if (Math.abs(dx) > 4) isDragging.current = true;
     if (!isDragging.current) return;
     const now = Date.now();
-    const dt = now - lastTime.current || 1;
-    velX.current = ((lastX.current - e.pageX) / dt) * 16;
-    lastX.current = e.pageX;
+    const dt  = now - lastTime.current || 1;
+    velX.current   = ((lastX.current - e.pageX) / dt) * 16;
+    lastX.current  = e.pageX;
     lastTime.current = now;
     containerRef.current.scrollLeft = startScrollLeft.current - dx;
   };
@@ -172,9 +198,7 @@ export default function ScrollContent() {
   };
 
   useEffect(() => {
-    return () => {
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    };
+    return () => { if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current); };
   }, []);
 
   return (
@@ -207,7 +231,7 @@ export default function ScrollContent() {
         ref={containerRef}
         className="scroll-container flex gap-5"
         style={{
-          paddingLeft: "max(48px, calc((100vw - 1440px) / 2 + 48px))",
+          paddingLeft:  "max(48px, calc((100vw - 1440px) / 2 + 48px))",
           paddingRight: "max(48px, calc((100vw - 1440px) / 2 + 48px))",
         }}
         onPointerDown={handlePointerDown}
